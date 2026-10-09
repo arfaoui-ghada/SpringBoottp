@@ -1,0 +1,30 @@
+package com.example.demo;
+
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+
+public class Vehicule {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long idVehicule;
+    private String immatriculation ;
+    private String marque ;
+    private String modele;
+    @Enumerated(value = EnumType.STRING)
+    private CategorieVehicule categorie ;
+    @Enumerated(value = EnumType.STRING)
+    private StatutVehicule statut;
+    private BigDecimal tarifJournal;
+
+}
