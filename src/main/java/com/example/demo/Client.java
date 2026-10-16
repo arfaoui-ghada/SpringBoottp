@@ -1,12 +1,11 @@
 package com.example.demo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +23,6 @@ public class Client {
     private String telephone;
     private String numPermis;
     private LocalDate dateinscription;
+    @OneToMany(mappedBy = "client")
+    Set<Reservation> reservations;
 }
