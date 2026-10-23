@@ -20,7 +20,7 @@ private LocalDate dateFin;@Enumerated(value = EnumType.STRING)
 private StatutReservation statut;
 @ManyToOne
 Vehicule vehicule;
-@OneToOne
+@OneToOne(mappedBy = "reservation")
 Contrat contrat;
 @ManyToOne
 Client client;

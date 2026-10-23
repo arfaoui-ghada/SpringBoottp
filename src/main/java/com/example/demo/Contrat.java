@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Contrat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
