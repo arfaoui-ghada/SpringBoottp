@@ -26,7 +26,7 @@ public class VehiculeServices implements IVehiculeSercices
     }
 
     @Override
-    public Vehicule updateVehicule(Vehicule vehicule) {
+    public Vehicule updateVehicule(Long id,Vehicule vehicule) {
         return ivehiculeRepository.save(vehicule);
     }
 
@@ -36,7 +36,8 @@ public class VehiculeServices implements IVehiculeSercices
     }
 
     @Override
-    public List<Vehicule> getAll(Long id) {
-        return List.of();
+    public List<Vehicule> getAll() {
+
+        return ivehiculeRepository.findAll();
     }
 }
