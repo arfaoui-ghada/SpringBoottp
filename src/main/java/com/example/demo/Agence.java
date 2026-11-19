@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,7 @@ public class Agence {
     private String ville;
     private String adresse;
     private String telephone;
+    @JsonManagedReference
     @OneToMany(mappedBy = "agence")
     List<Vehicule> vehicules;
     @OneToMany(mappedBy = "agence")

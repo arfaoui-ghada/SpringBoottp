@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +29,7 @@ public class Vehicule {
     @Enumerated(value = EnumType.STRING)
     private StatutVehicule statut;
     private BigDecimal tarifJournal;
+    @JsonBackReference
     @ManyToOne
     Agence agence;
     @ManyToMany
