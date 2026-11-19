@@ -3,6 +3,8 @@ package com.example.demo;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +25,9 @@ public class Contrat {
     private BigDecimal montantTotal;
     private boolean valide;
     @OneToMany(mappedBy = "contrat" , cascade = CascadeType.ALL)
+    @JsonManagedReference
     Set<Paiement> paiements;
     @OneToOne
+    @JsonIgnore
     Reservation reservation;
 }

@@ -3,6 +3,7 @@ package com.example.demo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,5 +22,6 @@ public class Paiement {
     @Enumerated(value = EnumType.STRING)
     private ModePaiement modePaiement;
     @ManyToOne
+    @JsonBackReference
     Contrat contrat;
 }

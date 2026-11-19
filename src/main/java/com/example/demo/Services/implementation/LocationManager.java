@@ -2,6 +2,8 @@ package com.example.demo.Services.implementation;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.example.demo.Repository.IContratRepository;
 import com.example.demo.Repository.IReservationRepository;
 import com.example.demo.Services.location.legacy.SmsGateway;
 import com.example.demo.Services.location.legacy.SmtpClient;
+import com.example.demo.Services.promo.PromoCalculator;
 
 /**
  * Confirmation des reservations.
@@ -28,6 +31,7 @@ public class LocationManager {
 
     @Autowired private IReservationRepository reservationRepository;
     @Autowired private IContratRepository contratRepository;
+    @Autowired private PromoCalculator promoCalculator;
 
     public Contrat confirmerReservation(Long reservationId, String modePaiement, String codePromo, String canal) {
         Reservation r = reservationRepository.findById(reservationId).orElse(null);
@@ -45,27 +49,18 @@ public class LocationManager {
 
         // ---------- 2. tarif de base ----------
         long j = ChronoUnit.DAYS.between(r.getDateDebut(), r.getDateFin()) + 1;
-        double m = j * r.getVehicule().getTarifJournalier();
+        BigDecimal m = r.getVehicule().getTarifJournal()
+                .multiply(BigDecimal.valueOf(j));
 
         // ---------- 3. remises ----------
-        String t = r.getClient().getType();
-        if (t.equals("PARTICULIER")) {
-            if (j >= 7) m = m * 0.90;
-        } else if (t.equals("ENTREPRISE")) {
-            m = m * 0.85;
-        } else if (t.equals("VIP")) {
-            m = m * 0.80;
-        }
-        if (codePromo != null && codePromo.equals("BIENVENUE")) {
-            m = m - 20;
-        }
+        m = promoCalculator.appliquer(m, codePromo);
 
         // ---------- 4. paiement ----------
         Paiement p = new Paiement();
         p.setDatePaiement(LocalDate.now());
         if (modePaiement.equals("CARTE")) {
             System.out.println("Debit de la carte bancaire...");
-            m = m * 1.01; // 1 % de frais
+            m = m.multiply(new BigDecimal("1.01")); // 1 % de frais
             p.setModePaiement(ModePaiement.CARTE);
         } else if (modePaiement.equals("VIREMENT")) {
             System.out.println("Attente du virement...");
@@ -83,6 +78,8 @@ public class LocationManager {
         c.setDateSignature(LocalDate.now());
         c.setMontantTotal(m);
         c.setValide(true);
+        c.setPaiements(new HashSet<>());
+        c.setReservation(r);
         c.getPaiements().add(p);
         p.setContrat(c);
         Contrat res = contratRepository.save(c);
